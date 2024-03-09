@@ -1,9 +1,16 @@
-import { Controller, Get, Post, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers } from "@nestjs/common";
+import { Controller, Get, Post, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers, Body } from "@nestjs/common";
 import { Request, Response } from "express";
 
 
-interface QType {
-    id: number,
+const USERS = [
+    {
+        id: 1,
+        name: "Wasiuddin"
+    }
+]
+
+interface createUserDTO {
+    id: number
     name: string
 }
 
@@ -11,10 +18,21 @@ interface QType {
 @Controller('/users')
 export class UserController {
 
-    @Get('/videos')
-    getVideos(@Headers() head: Record<string,any>) {
-        console.log(head)
-        return "Helllo Wasi"
+    @Post('/adduser')
+    @Redirect('/users/alluser')
+    addUser(@Body() bdy: createUserDTO) {
+       USERS.push(bdy)
+        return "Pushed Successfully"
+    }
+
+    @Get('/alluser')
+    getAllUser(){
+        return USERS
+    }
+
+    @Get('/giveuser/:id')
+    getSeparateUser(@Param('id') id: number){
+        return USERS.find(user => user.id == id)
     }
 
 }
